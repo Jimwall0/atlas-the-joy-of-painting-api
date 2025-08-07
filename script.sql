@@ -1,7 +1,7 @@
 -- Create database if it doesn't exist
 CREATE DATABASE IF NOT EXISTS The_Joy_Of_Painting;
 USE The_Joy_Of_Painting;
-CREATE USER 'bob'@'host' IDENTIFIED BY 'Th!s#p@ssw()rd#1sd7mb';
+CREATE USER IF NOT EXISTS 'bob'@'localhost' IDENTIFIED BY 'Th1s!stw1lv!';
 
 -- Table 1: Colors
 CREATE TABLE IF NOT EXISTS colors (
@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS features (
         ON DELETE CASCADE
 );
 
-GRANT * ON The_Joy_Of_Painting.colors TO 'bob'@'host';
-GRANT * ON The_Joy_Of_Painting.episode TO 'bob'@'host';
-GRANT * ON The_Joy_Of_Painting.features TO 'bob'@'host';
+GRANT ALL PRIVILEGES ON The_Joy_Of_Painting TO 'bob'@'localhost';
+GRANT ALL PRIVILEGES ON The_Joy_Of_Painting.episode TO 'bob'@'localhost';
+GRANT ALL PRIVILEGES ON The_Joy_Of_Painting.features TO 'bob'@'localhost';
+FLUSH PRIVILEGES;
