@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 username = 'root'
 password = 'your_password'
 host = 'localhost'
-port = 3306
+port = 5000
 database = 'The_Joy_Of_Painting'
 
 # Create SQLAlchemy engine
