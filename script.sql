@@ -1,6 +1,8 @@
+-- Create database if it doesn't exist
 CREATE DATABASE IF NOT EXISTS The_Joy_Of_Painting;
 USE The_Joy_Of_Painting;
 
+-- Table 1: Colors
 CREATE TABLE Colors (
     painting_index INT PRIMARY KEY,
     img_src VARCHAR(255),
@@ -12,6 +14,10 @@ CREATE TABLE Colors (
     colors TEXT,
     color_hex TEXT,
 
+    -- Link to episode (optional, for joins)
+    episode_code VARCHAR(10),
+
+    -- Pigment usage
     Black_Gesso TINYINT,
     Bright_Red TINYINT,
     Burnt_Umber TINYINT,
@@ -29,21 +35,27 @@ CREATE TABLE Colors (
     Titanium_White TINYINT,
     Van_Dyke_Brown TINYINT,
     Yellow_Ochre TINYINT,
-    Alizarin_Crimson TINYINT
+    Alizarin_Crimson TINYINT,
+
+    -- Optional foreign key to episodes table
+    FOREIGN KEY (episode_code) REFERENCES episodes(episode_code)
+        ON DELETE SET NULL
 );
 
+-- Table 2: Episodes
 CREATE TABLE episodes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
-    air_date DATE
+    air_date DATE,
+    episode_code VARCHAR(10) UNIQUE
 );
-ALTER TABLE episodes ADD COLUMN episode_code VARCHAR(10) UNIQUE;
 
-
+-- Table 3: Features
 CREATE TABLE features (
     episode_code VARCHAR(10) PRIMARY KEY,
     title VARCHAR(255),
 
+    -- Feature flags
     apple_frame BOOLEAN,
     aurora_borealis BOOLEAN,
     barn BOOLEAN,
@@ -110,5 +122,9 @@ CREATE TABLE features (
     windmill BOOLEAN,
     window_frame BOOLEAN,
     winter BOOLEAN,
-    wood_framed BOOLEAN
+    wood_framed BOOLEAN,
+
+    -- Foreign key constraint
+    FOREIGN KEY (episode_code) REFERENCES episodes(episode_code)
+        ON DELETE CASCADE
 );
