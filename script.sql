@@ -1,9 +1,10 @@
 -- Create database if it doesn't exist
 CREATE DATABASE IF NOT EXISTS The_Joy_Of_Painting;
 USE The_Joy_Of_Painting;
+CREATE USER 'bob'@'host' IDENTIFIED BY 'Th!s#p@ssw()rd#1sd7mb';
 
 -- Table 1: Colors
-CREATE TABLE Colors (
+CREATE TABLE IF NOT EXISTS colors (
     painting_index INT PRIMARY KEY,
     img_src VARCHAR(255),
     painting_title VARCHAR(255),
@@ -43,7 +44,7 @@ CREATE TABLE Colors (
 );
 
 -- Table 2: Episodes
-CREATE TABLE episodes (
+CREATE TABLE IF NOT EXISTS episodes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
     air_date DATE,
@@ -51,7 +52,7 @@ CREATE TABLE episodes (
 );
 
 -- Table 3: Features
-CREATE TABLE features (
+CREATE TABLE IF NOT EXISTS features (
     episode_code VARCHAR(10) PRIMARY KEY,
     title VARCHAR(255),
 
@@ -128,3 +129,7 @@ CREATE TABLE features (
     FOREIGN KEY (episode_code) REFERENCES episodes(episode_code)
         ON DELETE CASCADE
 );
+
+GRANT * ON The_Joy_Of_Painting.colors TO 'bob'@'host';
+GRANT * ON The_Joy_Of_Painting.episode TO 'bob'@'host';
+GRANT * ON The_Joy_Of_Painting.features TO 'bob'@'host';
