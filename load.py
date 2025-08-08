@@ -32,8 +32,16 @@ def import_csv_to_mysql(table_name, file_path, connection):
 
         cursor = connection.cursor()
 
-        if table_name == 'episodes':
-            df['episode_code'] = ['EP' + str(i + 1).zfill(3) for i in range(len(df))]
+        if table_name == 'features':
+            if 'episode' in df.columns:
+                df.rename(columns={'episode': 'episode_code'}, inplace=True)
+
+            # Get valid episode codes from episodes table
+            cursor.execute("SELECT episode_code FROM episodes")
+            valid_codes = set(row[0] for row in cursor.fetchall())
+
+            # Filter features rows with valid episode_code only
+            df = df[df['episode_code'].isin(valid_codes)]
 
         # Clear table first (optional)
         cursor.execute(f"DELETE FROM {table_name}")

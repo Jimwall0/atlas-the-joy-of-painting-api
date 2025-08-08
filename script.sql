@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS colors (
 
 -- Table 3: Features
 CREATE TABLE IF NOT EXISTS features (
+    episode_code VARCHAR(10),
     episode VARCHAR(255),
     title VARCHAR(255),
 
