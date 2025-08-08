@@ -32,6 +32,9 @@ def import_csv_to_mysql(table_name, file_path, connection):
 
         cursor = connection.cursor()
 
+        if table_name == 'episodes':
+            df['episode_code'] = ['EP' + str(i + 1).zfill(3) for i in range(len(df))]
+
         # Clear table first (optional)
         cursor.execute(f"DELETE FROM {table_name}")
         connection.commit()

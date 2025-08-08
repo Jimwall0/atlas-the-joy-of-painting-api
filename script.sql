@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS episodes (
 
 -- Table 2: Colors
 CREATE TABLE IF NOT EXISTS colors (
+    num_order INT,
     painting_index INT PRIMARY KEY,
     img_src VARCHAR(255),
     painting_title VARCHAR(255),
@@ -60,7 +61,7 @@ CREATE TABLE IF NOT EXISTS colors (
 
 -- Table 3: Features
 CREATE TABLE IF NOT EXISTS features (
-    episode_code VARCHAR(10) PRIMARY KEY,
+    episode VARCHAR(255),
     title VARCHAR(255),
 
     -- All features as boolean flags (default to false)
