@@ -7,12 +7,18 @@ CREATE USER IF NOT EXISTS 'bob'@'localhost' IDENTIFIED BY 'Th1s!stw1lv!';
 GRANT ALL PRIVILEGES ON The_Joy_Of_Painting.* TO 'bob'@'localhost';
 FLUSH PRIVILEGES;
 
+-- Remove tables
+DROP TABLE IF EXISTS features;
+DROP TABLE IF EXISTS colors;
+DROP TABLE IF EXISTS episodes;
+
 -- Table 1: Episodes
 CREATE TABLE IF NOT EXISTS episodes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
-    air_date DATE,
-    episode_code VARCHAR(10) UNIQUE NOT NULL
+    `date` DATE,
+    comment VARCHAR(255),
+    episode_code VARCHAR(10) UNIQUE
 );
 
 -- Table 2: Colors

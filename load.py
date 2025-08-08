@@ -1,21 +1,65 @@
 import pandas as pd
-from sqlalchemy import create_engine
+import mysql.connector
+from mysql.connector import Error
 
-# Replace with your actual DB config
-username = 'root'
-password = 'your_password'
-host = 'localhost'
-port = 5000
-database = 'The_Joy_Of_Painting'
+# Database connection config
+db_config = {
+    'host': 'localhost',
+    'user': 'bob',
+    'password': 'Th1s!stw1lv!',
+    'database': 'The_Joy_Of_Painting'
+}
 
-# Create SQLAlchemy engine
-engine = create_engine(f'mysql+mysqlconnector://{username}:{password}@{host}:{port}/{database}')
+# File paths (update if needed)
+csv_files = {
+    'episodes': 'Painting/cleanEpisodes.csv',
+    'colors': 'Painting/cleanColors.csv',
+    'features': 'Painting/cleanSubject.csv'
+}
 
-# Load your CSV into a DataFrame
-df = pd.read_csv('Painting/cleanColors.csv')  # replace with your actual CSV path
 
-# Optional: Preview the data
-print(df.head())
+# Function to import each CSV into a MySQL table
+def import_csv_to_mysql(table_name, file_path, connection):
+    print(f"Importing '{file_path}' into '{table_name}'...")
+    try:
+        df = pd.read_csv(file_path)
 
-# Upload to SQL table (append or replace)
-df.to_sql('Colors', con=engine, if_exists='append', index=False)
+        # Replace NaN with None
+        df = df.where(pd.notnull(df), None)
+
+        # Normalize column names to lower case (adjust if your DB uses different)
+        df.columns = [col.lower() for col in df.columns]
+
+        cursor = connection.cursor()
+
+        # Clear table first (optional)
+        cursor.execute(f"DELETE FROM {table_name}")
+        connection.commit()
+
+        for _, row in df.iterrows():
+            placeholders = ', '.join(['%s'] * len(row))
+            columns = ', '.join(row.index)
+            sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+            cursor.execute(sql, tuple(row.values))
+
+        connection.commit()
+        print(f"✅ Successfully imported {len(df)} rows into '{table_name}'.")
+
+    except Exception as e:
+        print(f"❌ Error importing '{file_path}':", e)
+
+
+# Main execution
+try:
+    conn = mysql.connector.connect(**db_config)
+    if conn.is_connected():
+        print("Connected to MySQL ✅")
+
+        for table, file in csv_files.items():
+            import_csv_to_mysql(table, file, conn)
+
+        conn.close()
+        print("All done. MySQL connection closed.")
+
+except Error as e:
+    print("❌ MySQL connection error:", e)
