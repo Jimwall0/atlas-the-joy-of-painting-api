@@ -1,9 +1,21 @@
--- Create database if it doesn't exist
+-- Create database and select it
 CREATE DATABASE IF NOT EXISTS The_Joy_Of_Painting;
 USE The_Joy_Of_Painting;
-CREATE USER IF NOT EXISTS 'bob'@'localhost' IDENTIFIED BY 'Th1s!stw1lv!';
 
--- Table 1: Colors
+-- Create user
+CREATE USER IF NOT EXISTS 'bob'@'localhost' IDENTIFIED BY 'Th1s!stw1lv!';
+GRANT ALL PRIVILEGES ON The_Joy_Of_Painting.* TO 'bob'@'localhost';
+FLUSH PRIVILEGES;
+
+-- Table 1: Episodes
+CREATE TABLE IF NOT EXISTS episodes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    air_date DATE,
+    episode_code VARCHAR(10) UNIQUE NOT NULL
+);
+
+-- Table 2: Colors
 CREATE TABLE IF NOT EXISTS colors (
     painting_index INT PRIMARY KEY,
     img_src VARCHAR(255),
@@ -15,40 +27,29 @@ CREATE TABLE IF NOT EXISTS colors (
     colors TEXT,
     color_hex TEXT,
 
-    -- Link to episode (optional, for joins)
     episode_code VARCHAR(10),
 
-    -- Pigment usage
-    Black_Gesso TINYINT,
-    Bright_Red TINYINT,
-    Burnt_Umber TINYINT,
-    Cadmium_Yellow TINYINT,
-    Dark_Sienna TINYINT,
-    Indian_Red TINYINT,
-    Indian_Yellow TINYINT,
-    Liquid_Black TINYINT,
-    Liquid_Clear TINYINT,
-    Midnight_Black TINYINT,
-    Phthalo_Blue TINYINT,
-    Phthalo_Green TINYINT,
-    Prussian_Blue TINYINT,
-    Sap_Green TINYINT,
-    Titanium_White TINYINT,
-    Van_Dyke_Brown TINYINT,
-    Yellow_Ochre TINYINT,
-    Alizarin_Crimson TINYINT,
+    -- Pigment usage: default to 0 (false)
+    Black_Gesso TINYINT DEFAULT 0,
+    Bright_Red TINYINT DEFAULT 0,
+    Burnt_Umber TINYINT DEFAULT 0,
+    Cadmium_Yellow TINYINT DEFAULT 0,
+    Dark_Sienna TINYINT DEFAULT 0,
+    Indian_Red TINYINT DEFAULT 0,
+    Indian_Yellow TINYINT DEFAULT 0,
+    Liquid_Black TINYINT DEFAULT 0,
+    Liquid_Clear TINYINT DEFAULT 0,
+    Midnight_Black TINYINT DEFAULT 0,
+    Phthalo_Blue TINYINT DEFAULT 0,
+    Phthalo_Green TINYINT DEFAULT 0,
+    Prussian_Blue TINYINT DEFAULT 0,
+    Sap_Green TINYINT DEFAULT 0,
+    Titanium_White TINYINT DEFAULT 0,
+    Van_Dyke_Brown TINYINT DEFAULT 0,
+    Yellow_Ochre TINYINT DEFAULT 0,
+    Alizarin_Crimson TINYINT DEFAULT 0,
 
-    -- Optional foreign key to episodes table
-    FOREIGN KEY (episode_code) REFERENCES episodes(episode_code)
-        ON DELETE SET NULL
-);
-
--- Table 2: Episodes
-CREATE TABLE IF NOT EXISTS episodes (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
-    air_date DATE,
-    episode_code VARCHAR(10) UNIQUE
+    FOREIGN KEY (episode_code) REFERENCES episodes(episode_code) ON DELETE SET NULL
 );
 
 -- Table 3: Features
@@ -56,81 +57,74 @@ CREATE TABLE IF NOT EXISTS features (
     episode_code VARCHAR(10) PRIMARY KEY,
     title VARCHAR(255),
 
-    -- Feature flags
-    apple_frame BOOLEAN,
-    aurora_borealis BOOLEAN,
-    barn BOOLEAN,
-    beach BOOLEAN,
-    boat BOOLEAN,
-    bridge BOOLEAN,
-    building BOOLEAN,
-    bushes BOOLEAN,
-    cabin BOOLEAN,
-    cactus BOOLEAN,
-    circle_frame BOOLEAN,
-    cirrus BOOLEAN,
-    cliff BOOLEAN,
-    clouds BOOLEAN,
-    conifer BOOLEAN,
-    cumulus BOOLEAN,
-    deciduous BOOLEAN,
-    diane_andre BOOLEAN,
-    dock BOOLEAN,
-    double_oval_frame BOOLEAN,
-    farm BOOLEAN,
-    fence BOOLEAN,
-    fire BOOLEAN,
-    florida_frame BOOLEAN,
-    flowers BOOLEAN,
-    fog BOOLEAN,
-    framed BOOLEAN,
-    grass BOOLEAN,
-    guest BOOLEAN,
-    half_circle_frame BOOLEAN,
-    half_oval_frame BOOLEAN,
-    hills BOOLEAN,
-    lake BOOLEAN,
-    lakes BOOLEAN,
-    lighthouse BOOLEAN,
-    mill BOOLEAN,
-    moon BOOLEAN,
-    mountain BOOLEAN,
-    mountains BOOLEAN,
-    night BOOLEAN,
-    ocean BOOLEAN,
-    oval_frame BOOLEAN,
-    palm_trees BOOLEAN,
-    path BOOLEAN,
-    person BOOLEAN,
-    portrait BOOLEAN,
-    rectangle_3d_frame BOOLEAN,
-    rectangular_frame BOOLEAN,
-    river BOOLEAN,
-    rocks BOOLEAN,
-    seashell_frame BOOLEAN,
-    snow BOOLEAN,
-    snowy_mountain BOOLEAN,
-    split_frame BOOLEAN,
-    steve_ross BOOLEAN,
-    structure BOOLEAN,
-    sun BOOLEAN,
-    tomb_frame BOOLEAN,
-    tree BOOLEAN,
-    trees BOOLEAN,
-    triple_frame BOOLEAN,
-    waterfall BOOLEAN,
-    waves BOOLEAN,
-    windmill BOOLEAN,
-    window_frame BOOLEAN,
-    winter BOOLEAN,
-    wood_framed BOOLEAN,
+    -- All features as boolean flags (default to false)
+    apple_frame BOOLEAN DEFAULT FALSE,
+    aurora_borealis BOOLEAN DEFAULT FALSE,
+    barn BOOLEAN DEFAULT FALSE,
+    beach BOOLEAN DEFAULT FALSE,
+    boat BOOLEAN DEFAULT FALSE,
+    bridge BOOLEAN DEFAULT FALSE,
+    building BOOLEAN DEFAULT FALSE,
+    bushes BOOLEAN DEFAULT FALSE,
+    cabin BOOLEAN DEFAULT FALSE,
+    cactus BOOLEAN DEFAULT FALSE,
+    circle_frame BOOLEAN DEFAULT FALSE,
+    cirrus BOOLEAN DEFAULT FALSE,
+    cliff BOOLEAN DEFAULT FALSE,
+    clouds BOOLEAN DEFAULT FALSE,
+    conifer BOOLEAN DEFAULT FALSE,
+    cumulus BOOLEAN DEFAULT FALSE,
+    deciduous BOOLEAN DEFAULT FALSE,
+    diane_andre BOOLEAN DEFAULT FALSE,
+    dock BOOLEAN DEFAULT FALSE,
+    double_oval_frame BOOLEAN DEFAULT FALSE,
+    farm BOOLEAN DEFAULT FALSE,
+    fence BOOLEAN DEFAULT FALSE,
+    fire BOOLEAN DEFAULT FALSE,
+    florida_frame BOOLEAN DEFAULT FALSE,
+    flowers BOOLEAN DEFAULT FALSE,
+    fog BOOLEAN DEFAULT FALSE,
+    framed BOOLEAN DEFAULT FALSE,
+    grass BOOLEAN DEFAULT FALSE,
+    guest BOOLEAN DEFAULT FALSE,
+    half_circle_frame BOOLEAN DEFAULT FALSE,
+    half_oval_frame BOOLEAN DEFAULT FALSE,
+    hills BOOLEAN DEFAULT FALSE,
+    lake BOOLEAN DEFAULT FALSE,
+    lakes BOOLEAN DEFAULT FALSE,
+    lighthouse BOOLEAN DEFAULT FALSE,
+    mill BOOLEAN DEFAULT FALSE,
+    moon BOOLEAN DEFAULT FALSE,
+    mountain BOOLEAN DEFAULT FALSE,
+    mountains BOOLEAN DEFAULT FALSE,
+    night BOOLEAN DEFAULT FALSE,
+    ocean BOOLEAN DEFAULT FALSE,
+    oval_frame BOOLEAN DEFAULT FALSE,
+    palm_trees BOOLEAN DEFAULT FALSE,
+    path BOOLEAN DEFAULT FALSE,
+    person BOOLEAN DEFAULT FALSE,
+    portrait BOOLEAN DEFAULT FALSE,
+    rectangle_3d_frame BOOLEAN DEFAULT FALSE,
+    rectangular_frame BOOLEAN DEFAULT FALSE,
+    river BOOLEAN DEFAULT FALSE,
+    rocks BOOLEAN DEFAULT FALSE,
+    seashell_frame BOOLEAN DEFAULT FALSE,
+    snow BOOLEAN DEFAULT FALSE,
+    snowy_mountain BOOLEAN DEFAULT FALSE,
+    split_frame BOOLEAN DEFAULT FALSE,
+    steve_ross BOOLEAN DEFAULT FALSE,
+    structure BOOLEAN DEFAULT FALSE,
+    sun BOOLEAN DEFAULT FALSE,
+    tomb_frame BOOLEAN DEFAULT FALSE,
+    tree BOOLEAN DEFAULT FALSE,
+    trees BOOLEAN DEFAULT FALSE,
+    triple_frame BOOLEAN DEFAULT FALSE,
+    waterfall BOOLEAN DEFAULT FALSE,
+    waves BOOLEAN DEFAULT FALSE,
+    windmill BOOLEAN DEFAULT FALSE,
+    window_frame BOOLEAN DEFAULT FALSE,
+    winter BOOLEAN DEFAULT FALSE,
+    wood_framed BOOLEAN DEFAULT FALSE,
 
-    -- Foreign key constraint
-    FOREIGN KEY (episode_code) REFERENCES episodes(episode_code)
-        ON DELETE CASCADE
+    FOREIGN KEY (episode_code) REFERENCES episodes(episode_code) ON DELETE CASCADE
 );
-
-GRANT ALL PRIVILEGES ON The_Joy_Of_Painting TO 'bob'@'localhost';
-GRANT ALL PRIVILEGES ON The_Joy_Of_Painting.episode TO 'bob'@'localhost';
-GRANT ALL PRIVILEGES ON The_Joy_Of_Painting.features TO 'bob'@'localhost';
-FLUSH PRIVILEGES;
