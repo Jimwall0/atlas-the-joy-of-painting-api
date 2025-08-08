@@ -10,7 +10,7 @@ db_config = {
     'database': 'The_Joy_Of_Painting'
 }
 
-# File paths (update if needed)
+# File paths
 csv_files = {
     'episodes': 'Painting/cleanEpisodes.csv',
     'colors': 'Painting/cleanColors.csv',
@@ -24,13 +24,15 @@ def import_csv_to_mysql(table_name, file_path, connection):
     try:
         df = pd.read_csv(file_path)
 
-        # Replace NaN with None
         df = df.where(pd.notnull(df), None)
 
-        # Normalize column names to lower case (adjust if your DB uses different)
         df.columns = [col.lower() for col in df.columns]
 
         cursor = connection.cursor()
+
+        if table_name == 'episodes':
+            df['episode_code'] = ['EP' + str(i + 1).zfill(3) for i in range(len(df))]
+
 
         if table_name == 'features':
             if 'episode' in df.columns:
@@ -43,7 +45,6 @@ def import_csv_to_mysql(table_name, file_path, connection):
             # Filter features rows with valid episode_code only
             df = df[df['episode_code'].isin(valid_codes)]
 
-        # Clear table first (optional)
         cursor.execute(f"DELETE FROM {table_name}")
         connection.commit()
 
